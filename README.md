@@ -8,12 +8,14 @@ This is a simple script to scrape data from the official ecommerce website of Da
 * tqdm == 4.65.0
 
 ## Dataset
-The data that I've extracted at the moment contains three features:
+The data that I've extracted at the moment contains five features:
 ```json
 {
 "product_name": "NSW POKEMON LEGENDS ARCEUS (MDE)",
 "price": 2459,
 "availability": "Add to Cart",
+"region": "MDE",
+"product_category": "Game"
 }
 ```
 
