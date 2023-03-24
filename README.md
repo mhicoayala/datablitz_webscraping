@@ -13,7 +13,7 @@ The data that I've extracted at the moment contains five features:
 {
 "product_name": "NSW POKEMON LEGENDS ARCEUS (MDE)",
 "price": 2459,
-"availability": "Add to Cart",
+"availability": "In stock",
 "region": "MDE",
 "product_category": "Game"
 }
