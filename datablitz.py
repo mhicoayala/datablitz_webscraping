@@ -79,5 +79,3 @@ def specification_check(self):
 df['product_category'] = df['product_name'].apply(specification_check)
 
 data_nsw = df.to_json(orient='records')
-
-print(data)
