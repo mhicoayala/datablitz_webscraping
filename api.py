@@ -6,7 +6,7 @@ app = Flask(__name__)
 
 @app.route('/nsw')
 def index():
-    return datablitz.json_nsw
+    return datablitz.data_nsw
 
 
 if __name__ == '__main__':
