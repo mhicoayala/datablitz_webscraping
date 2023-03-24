@@ -8,14 +8,21 @@ This is a simple script to scrape data from the official ecommerce website of Da
 * tqdm == 4.65.0
 
 ## Dataset
-The data that I've extracted at the moment contains three features. See sample data below:
+The data that I've extracted at the moment contains three features:
 ```json
 {
 "product_name": "NSW POKEMON LEGENDS ARCEUS (MDE)",
 "price": 2459,
-"availability": "Add to Cart"
+"availability": "Add to Cart",
 }
 ```
 
 ## Updates
-The initial commit of this project is scraping only the data on Nintendo Switch related items, more platforms will be added soon.
+* 2023-03-24 | Initial commit is scraping only data on Nintendo Switch related items. More platforms will be added soon.
+* 2023-03-25 | Added two new features: region and product_category:
+```json
+{
+"region": "MDE",
+"product_category": "Game"
+}
+```
