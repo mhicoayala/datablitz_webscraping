@@ -4,7 +4,7 @@ import pandas as pd
 from tqdm import tqdm
 import numpy as np
 
-glob_url = f'https://ecommerce.datablitz.com.ph/collections/nintendo-switch'
+glob_url = f'https://ecommerce.datablitz.com.ph/collections/nintendo-switch' # glob_url == global url
 glob_web = requests.get(glob_url)
 glob_doc = doc = BeautifulSoup(glob_web.text, 'html.parser')
 
@@ -38,6 +38,13 @@ for i in range(1, total):
 
 df = pd.json_normalize(consolidated_list)
 
+platforms = [
+        'NSW',
+        'PS4'
+]
+
+df['product_name'] = df['product_name'].str.replace(r'\b{}\b'.format('|'.join(platforms)), '', regex=True)
+
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8') # setting up locale to convert string with ##,###.00 format
 df['price'] = df['price'].str.replace('₱','').apply(locale.atof).astype(float) # converting price string to float
 
@@ -68,7 +75,9 @@ def specification_check(self):
                    'card',
                    'case',
                    'analog',
-                   'protector'
+                   'protector',
+                   'thumb',
+                   'grip'
                    ]
 
     if any(re.search(accessories, self.lower()) for accessories in accessories):
@@ -76,6 +85,6 @@ def specification_check(self):
     else:
         return 'Game'
 
-df['product_category'] = df['product_name'].apply(specification_check)
+df['product_type'] = df['product_name'].apply(specification_check)
 
 data_nsw = df.to_json(orient='records')
