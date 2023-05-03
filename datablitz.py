@@ -38,13 +38,7 @@ for i in range(1, total):
 
 df = pd.json_normalize(consolidated_list)
 
-platforms = [
-        'NSW',
-        'PS4'
-]
-
-df['product_name'] = df['product_name'].str.replace(r'\b{}\b'.format('|'.join(platforms)), '', regex=True)
-
+###############
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8') # setting up locale to convert string with ##,###.00 format
 df['price'] = df['price'].str.replace('₱','').apply(locale.atof).astype(float) # converting price string to float
 
@@ -63,6 +57,10 @@ def region_check(self):
         return 'Asian'
     elif re.search(r'\(au', self.lower()):
         return 'AU'
+    elif re.search(r'\(ntsc', self.lower()):
+        return 'NTSC'
+    elif re.search(r'\(pal', self.lower()):
+        return 'PAL'
     else:
         return 'Not Specified'
 
@@ -77,14 +75,33 @@ def specification_check(self):
                    'analog',
                    'protector',
                    'thumb',
-                   'grip'
+                   'grip',
+                   'controller',
+                   'headset'
                    ]
 
     if any(re.search(accessories, self.lower()) for accessories in accessories):
         return 'Accessories'
+    elif any(re.search(accessories, self.lower()) for accessories in accessories) == False and re.search('pre-order', self.lower()) is not None:
+        return ' Game Pre-Order'
     else:
         return 'Game'
 
 df['product_type'] = df['product_name'].apply(specification_check)
+
+# Remove platform name in product_name
+platforms = [
+        'NSW',
+        'PS4',
+        'PS5',
+        'XBOX ONE',
+        'XBOXSX',
+        'PC'
+]
+
+# Remove parentheses and data inside on product_name
+df['product_name'] = df['product_name'].str.replace(r'\((.*?)\)', '', regex=True)
+
+df['product_name'] = df['product_name'].str.replace(r'\b{}\b'.format('|'.join(platforms)), '', regex=True).str.title()
 
 data_nsw = df.to_json(orient='records')
