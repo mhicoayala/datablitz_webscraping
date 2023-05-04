@@ -8,19 +8,19 @@ glob_url = f'https://ecommerce.datablitz.com.ph/collections/nintendo-switch' # g
 glob_web = requests.get(glob_url)
 glob_doc = doc = BeautifulSoup(glob_web.text, 'html.parser')
 
-display_page, nsw_page = 24, 24#3103
+display_page, nsw_page = 24, 72#3103
 
 consolidated_list = []
 
 total = math.ceil(nsw_page/display_page) + 1
 
-#pbar = tqdm(total=total-1)
+pbar = tqdm(total=total-1)
 
 for i in range(1, total):
 
-    #pbar.update()
+    pbar.update()
 
-    url = f'https://ecommerce.datablitz.com.ph/collections/pc?page={i}'
+    url = f'https://ecommerce.datablitz.com.ph/collections/ps5?page={i}'
 
     web = requests.get(url)
 
@@ -35,10 +35,10 @@ for i in range(1, total):
         consolidated_list.append(raw_dict)
 
 # Convert into dataframe so perform data transformation
-
 df = pd.json_normalize(consolidated_list)
 
-###############
+############################################################
+
 locale.setlocale(locale.LC_ALL, 'en_US.UTF-8') # setting up locale to convert string with ##,###.00 format
 df['price'] = df['price'].str.replace('₱','').apply(locale.atof).astype(float) # converting price string to float
 
@@ -73,7 +73,9 @@ platforms = [
         'PS5',
         'XBOX ONE',
         'XBOXSX',
-        'PC'
+        'PC',
+        'N-SWITCH',
+        'XBOXONE'
 ]
 
 pc_components = [
@@ -130,16 +132,9 @@ def specification_check(self):
 df['product_type'] = df['product_name'].apply(specification_check)
 
 # Remove platform name in product_name
-
-language = [
-    'ENG',
-    'SP',
-    'FR'
-]
-
-# Remove parentheses and data inside on product_name
 df['product_name'] = df['product_name'].str.replace(r'\((.*?)\)', '', regex=True)
 
+# Remove parentheses and data inside on product_name
 df['product_name'] = df['product_name'].str.replace(r'\b{}\b'.format('|'.join(platforms)), '', regex=True).str.title()
 
 data_nsw = df.to_json(orient='records')
