@@ -99,6 +99,12 @@ platforms = [
         'PC'
 ]
 
+language = [
+    'ENG',
+    'SP',
+    'FR'
+]
+
 # Remove parentheses and data inside on product_name
 df['product_name'] = df['product_name'].str.replace(r'\((.*?)\)', '', regex=True)
 
