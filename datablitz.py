@@ -20,7 +20,7 @@ for i in range(1, total):
 
     #pbar.update()
 
-    url = f'https://ecommerce.datablitz.com.ph/collections/nintendo-switch?page={i}'
+    url = f'https://ecommerce.datablitz.com.ph/collections/pc?page={i}'
 
     web = requests.get(url)
 
@@ -66,6 +66,44 @@ def region_check(self):
 
 df['region'] = df['product_name'].apply(region_check)
 
+# Platform list
+platforms = [
+        'NSW',
+        'PS4',
+        'PS5',
+        'XBOX ONE',
+        'XBOXSX',
+        'PC'
+]
+
+pc_components = [
+    'laptop',
+]
+
+def platform_check(self):
+    if re.search(r'\bmulti-platform', self.lower()):
+        return 'Multi-Platform'
+    elif sum(map(self.count, platforms)) > 1:
+        return 'Multi-Platform'
+    elif re.search(r'\bnsw', self.lower()):
+        return 'NSW'
+    elif re.search(r'\bps4', self.lower()):
+        return 'PS4'
+    elif re.search(r'\bps5', self.lower()):
+        return 'PS5'
+    elif re.search(r'\bxbox one', self.lower()):
+        return 'XBOX ONE'
+    elif re.search(r'\bxboxsx', self.lower()):
+        return 'XBOX Series S/X'
+    elif re.search(r'\bpc', self.lower()):
+        return 'PC'
+    elif any(re.search(pc_component, self.lower()) for pc_component in pc_components):
+        return 'PC'
+    else:
+        return 'Miscellaneous'
+
+df['platform'] = df['product_name'].apply(platform_check)
+
 def specification_check(self):
 
     accessories = ['thumbstick',
@@ -77,7 +115,9 @@ def specification_check(self):
                    'thumb',
                    'grip',
                    'controller',
-                   'headset'
+                   'headset',
+                   'stereo',
+                   'speaker'
                    ]
 
     if any(re.search(accessories, self.lower()) for accessories in accessories):
@@ -90,14 +130,6 @@ def specification_check(self):
 df['product_type'] = df['product_name'].apply(specification_check)
 
 # Remove platform name in product_name
-platforms = [
-        'NSW',
-        'PS4',
-        'PS5',
-        'XBOX ONE',
-        'XBOXSX',
-        'PC'
-]
 
 language = [
     'ENG',
